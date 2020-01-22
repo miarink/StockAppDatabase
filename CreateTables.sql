@@ -1,0 +1,83 @@
+
+CREATE TABLE User_account(
+Acct_id DECIMAL(12) NOT NULL PRIMARY KEY,
+AcctUserName VARCHAR(64) NOT NULL,
+AcctPassWord VARCHAR(255) NOT NULL,
+FirstName VARCHAR(255)NOT NULL,
+LastName VARCHAR(255)NOT NULL,
+Email VARCHAR(255)NOT NULL);
+
+
+CREATE TABLE Portfolio(
+Portfolio_id DECIMAL(12) NOT NULL PRIMARY KEY,
+Acct_id DECIMAL(12) NOT NULL,
+FOREIGN KEY(Acct_id)REFERENCES User_account(Acct_id));
+
+CREATE TABLE Broker(
+Broker_id DECIMAL(12) NOT NULL PRIMARY KEY,
+Broker_name VARCHAR(255) NOT NULL,
+BrokerBalance DECIMAL (12,2) NOT NULL);
+
+CREATE TABLE Price_history(
+Stock_id DECIMAL(12) NOT NULL,
+Price DECIMAL(12,2) NOT NULL,
+Price_date DATE NOT NULL);
+
+
+CREATE TABLE PaymentType(
+PaymentType CHAR(4) NOT NULL PRIMARY KEY,
+PaymentDescription VARCHAR(255));
+
+CREATE TABLE Payments(
+Payment_id DECIMAL(12) NOT NULL PRIMARY KEY,
+Broker_id DECIMAL(12) NOT NULL,
+PaymentType CHAR(4) NOT NULL,
+PaymentDate DATE NOT NULL,
+PaymentAmount DECIMAL(12,2)NOT NULL,
+FOREIGN KEY(Broker_id)REFERENCES Broker(Broker_id),
+FOREIGN KEY(PaymentType)REFERENCES PaymentType(PaymentType));
+
+CREATE TABLE TransType(
+TransType_id DECIMAL(12) NOT NULL PRIMARY KEY,
+Transtype_description VARCHAR(10));
+
+CREATE TABLE Stock(
+Stock_id DECIMAL(12) NOT NULL PRIMARY KEY,
+StockSymbol VARCHAR(10) NOT NULL,
+StockName VARCHAR(255) NOT NULL,
+StockType CHAR(4) NOT NULL);
+
+CREATE TABLE StockTransaction(
+Trans_id DECIMAL(12) NOT NULL PRIMARY KEY,
+Stock_id DECIMAL(12) NOT NULL,
+Acct_id DECIMAL (12) NOT NULL,
+Broker_id DECIMAL(12) NOT NULL,
+TransType_id DECIMAL(12) NOT NULL,
+TransDate DATE NOT NULL,
+PricePerShare DECIMAL(12,2) NOT NULL,
+Shares DECIMAL(12)NOT NULL
+FOREIGN KEY(Stock_id)REFERENCES Stock(Stock_id),
+FOREIGN KEY(Acct_id)REFERENCES User_account(Acct_id),
+FOREIGN KEY(Broker_id)REFERENCES Broker(Broker_id),
+FOREIGN KEY(TransType_id)REFERENCES TransType(TransType_id));
+
+
+
+CREATE TABLE Sell(
+Trans_id DECIMAL(12) NOT NULL PRIMARY KEY,
+FOREIGN KEY(Trans_id)REFERENCES StockTransaction(Trans_id));
+
+CREATE TABLE Buy(
+Trans_id DECIMAL(12) NOT NULL PRIMARY KEY,
+FOREIGN KEY(Trans_id)REFERENCES StockTransaction(Trans_id));
+
+CREATE TABLE Fund(
+Stock_id DECIMAL(12) NOT NULL PRIMARY KEY,
+FOREIGN KEY(Stock_id)REFERENCES Stock(Stock_id));
+
+CREATE TABLE Individual_stock(
+Stock_id DECIMAL(12) NOT NULL PRIMARY KEY,
+FOREIGN KEY(Stock_id)REFERENCES Stock(Stock_id));
+
+
+
